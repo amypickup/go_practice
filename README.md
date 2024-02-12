@@ -34,3 +34,4 @@ Optional things to explore:
    Use `go mod init example/hello`, `go mod init example.com/greetings` to enable dependency tracking
    Use `go mod tidy` to add imported modules
    Use `go mod edit -replace example.com/greetings=../greetings` to use local vs. published package
+   Go has built in testing, add \_test.go to have `go test` include it in check
