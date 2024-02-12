@@ -2,7 +2,7 @@
 
 This endpoint provides up-to-the-minute crypto exchange rates relative to US dollars:
 
-[https://api.coinbase.com/v2/exchange-rates?currency=USD](https://t.lever-analytics.com/email-link?dest=https%3A%2F%2Fapi.coinbase.com%2Fv2%2Fexchange-rates%3Fcurrency%3DUSD&eid=5746e8fc-e446-499f-b59b-07e3ac76626c&idx=0&token=RTQZ5YFjocAJc2L52GYa3b_fYJU)
+[https://api.coinbase.com/v2/exchange-rates?currency=USD](https://api.coinbase.com/v2/exchange-rates?currency=USD)
 
 Crypto is all the rage these days and I don't want to miss out! I want to keep 70% of my crypto holdings in BTC and 30% in ETH. Write a function that takes the amount I have to spend in USD as a parameter and returns the number of Bitcoin and Ethereum to buy.
 
