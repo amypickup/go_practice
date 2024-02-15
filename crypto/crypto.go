@@ -2,11 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/shopspring/decimal"
 )
@@ -33,21 +33,16 @@ type ExchangeRateResponse struct {
 // Ben W
 
 func main() {
-  // https://gobyexample.com/command-line-arguments
-  args := os.Args[1:]
-  if len(args) != 1 {
-    log.Fatalf("Incorrect number of args, please try again")
+  // Used https://gobyexample.com/command-line-flags and https://pkg.go.dev/flag
+  a_flag := flag.String("a", "", "the amount you plan to spend in USD")
+  flag.Parse()
+  
+  amount, err := decimal.NewFromString(*a_flag)
+  if err != nil {
+    log.Fatalf("Arg not parsed as amount, try again %s", err)
   }
-  // fmt.Printf("arg provided: %v - %s, type: %T\n", os.Args[1], os.Args[1], os.Args[1])
+  // fmt.Printf("arg = %v is of type %T\n", amount, amount)
 
-  amount, amt_err := decimal.NewFromString(os.Args[1]) 
-  // amount, amt_err := strconv.Atoi(os.Args[1])
-  if amt_err != nil {
-    log.Fatalf("Arg not parsed as amount, try again %s", amt_err)
-  }
-  fmt.Printf("arg = %v is of type %T\n", amount, amount)
-
-  // TODO: Check if multiple use of err is ok
   // suggested usage of Get with ReadAll: https://pkg.go.dev/net/http
   resp, err := http.Get(COINBASE_URL)
   if err != nil {
@@ -63,22 +58,24 @@ func main() {
   }
 	// fmt.Printf("%s", body)
 
-  // use a generic map for now
-  // TODO: define an explicit struct
-  var exchange_rates ExchangeRateResponse
-  error := json.Unmarshal([]byte(body), &exchange_rates)
-  if error != nil {
-    log.Fatalf("Unable to marshal JSON due to %s", error)
-  }
-  // fmt.Println(exchange_rates.Data.Rates["ETH"])
+  // TODO: Confirm struct definition is decent practice
+  // Ex. should use explicit struct w/ all currency defs like json to go
+  // or is generic ok? vs. ok to use map vs. named strings
 
-  btc_rate, btc_err := decimal.NewFromString(exchange_rates.Data.Rates["BTC"])
-  if btc_err != nil {
-    log.Fatalf("Unable to parse exchange rates, %s", btc_err)
+  // Used https://pkg.go.dev/encoding/json
+  var exchange_rates ExchangeRateResponse
+  if err := json.Unmarshal([]byte(body), &exchange_rates); err != nil {
+		log.Fatalf("Unable to marshal JSON due to %s", err)
+	}
+  // fmt.Printf("Found eth value in json: %v", exchange_rates.Data.Rates["ETH"])
+
+  btc_rate, err := decimal.NewFromString(exchange_rates.Data.Rates["BTC"])
+  if err != nil {
+    log.Fatalf("Unable to parse exchange rates, %s", err)
   }
-  eth_rate, eth_err := decimal.NewFromString(exchange_rates.Data.Rates["ETH"])
-  if eth_err != nil {
-    log.Fatalf("Unable to parse exchange rates, %s", eth_err)
+  eth_rate, err := decimal.NewFromString(exchange_rates.Data.Rates["ETH"])
+  if err != nil {
+    log.Fatalf("Unable to parse exchange rates, %s", err)
   }
   // fmt.Printf("btc_rate = %T\n", btc_rate)
   // fmt.Printf("eth_rate = %T\n", eth_rate)
