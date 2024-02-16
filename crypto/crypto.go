@@ -46,17 +46,17 @@ func main() {
   // suggested usage of Get with ReadAll: https://pkg.go.dev/net/http
   resp, err := http.Get(COINBASE_URL)
   if err != nil {
-      log.Fatalf("Unable to fetch coinbase url json due to %s", err)
+    log.Fatalf("Unable to fetch coinbase url json due to %s", err)
   }
-	defer resp.Body.Close()
+  defer resp.Body.Close()
   // fmt.Println(resp)
 
   // TODO: Not sure if necessary, can you skip directly to unmarshalling?
 	body, err := io.ReadAll(resp.Body)
   if err != nil {
-		log.Fatalf("Unable to readall json due to %s", err)
+    log.Fatalf("Unable to readall json due to %s", err)
   }
-	// fmt.Printf("%s", body)
+  // fmt.Printf("%s", body)
 
   // TODO: Confirm struct definition is decent practice
   // Ex. should use explicit struct w/ all currency defs like json to go
@@ -65,8 +65,8 @@ func main() {
   // Used https://pkg.go.dev/encoding/json
   var exchange_rates ExchangeRateResponse
   if err := json.Unmarshal([]byte(body), &exchange_rates); err != nil {
-		log.Fatalf("Unable to marshal JSON due to %s", err)
-	}
+    log.Fatalf("Unable to marshal JSON due to %s", err)
+  }
   // fmt.Printf("Found eth value in json: %v", exchange_rates.Data.Rates["ETH"])
 
   btc_rate, err := decimal.NewFromString(exchange_rates.Data.Rates["BTC"])
@@ -80,14 +80,13 @@ func main() {
   // fmt.Printf("btc_rate = %T\n", btc_rate)
   // fmt.Printf("eth_rate = %T\n", eth_rate)
 
-	// TODO: check if type inference works as expected
-	// ex. var amount float32 = 100
+  // TODO: check if type inference / money calcs works as expected
 
-	//dummy_amount := decimal.NewFromInt(100)
+  //dummy_amount := decimal.NewFromInt(100)
   btc_multiplier := decimal.NewFromFloat(.7)
   eth_multiplier := decimal.NewFromFloat(.3)
-	btc_amount := amount.Mul(btc_multiplier).Mul(btc_rate)
-	eth_amount := amount.Mul(eth_multiplier).Mul(eth_rate)
+  btc_amount := amount.Mul(btc_multiplier).Mul(btc_rate)
+  eth_amount := amount.Mul(eth_multiplier).Mul(eth_rate)
 
   fmt.Printf("Btc purchase: $%v USD * %v Rate = %v BTC \n", amount.Mul(btc_multiplier), btc_rate, btc_amount)
   fmt.Printf("Eth purchase: $%v USD * %v Rate = %v ETH \n", amount.Mul(eth_multiplier), eth_rate, eth_amount)

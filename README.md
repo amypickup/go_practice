@@ -16,10 +16,10 @@ Create a go program that, via CLI, requires an input arg and prints json contain
 
 Initial sketch of steps to explore go:
 
-- Accept input
-- Accept input as a command line parameter (args library w/ flag, help)
-- Calculate + store allocations
-- Print json response
+- Accept input ✅
+- Accept input as a command line parameter (args library w/ flag, help) ✅
+- Handle json response ✅
+- Calculate + store exchange rates + amounts ✅
 - Write test file
 
 Optional things to explore:
@@ -27,14 +27,21 @@ Optional things to explore:
 - Check out if docstrings
 - Classes?
 - Print to a file
+- file formatting (weird spacing)
 
-#### Actual Steps
+Next Steps:
+
+- Break into three-ish testable functions (accept input, handle/format coinbase json request + response, business logic)
+- Write tests for each functions, ex. ensure incorrect input formats handled, json request/response formatting/data issues, business logic w/ mocked respone data
+
+#### Notes from Go Tutorials
 
 1. Used [Go Getting Started](https://go.dev/doc/tutorial/getting-started) to setup directory and complete hello world exapmle.
-   Use `go mod init example/hello`, `go mod init example.com/greetings` to enable dependency tracking
-   Use `go mod tidy` to add imported modules
-   Use `go mod edit -replace example.com/greetings=../greetings` to use local vs. published package
-   Go has built in testing, add \_test.go to have `go test` include it in check
-   `go build` - compiles pkgs + deps, no install
-   `go install` - compiles pkgs + install
-   `go list -f '{{.Target}}'` - discover the go install path, where binaries are installed
+
+- Use `go mod init example/hello`, `go mod init example.com/greetings` to enable dependency tracking
+- Use `go mod tidy` to add imported modules
+- Use `go mod edit -replace example.com/greetings=../greetings` to use local vs. published package
+- Go has built in testing, add \_test.go to have `go test` include it in check
+- `go build` - compiles pkgs + deps, no install
+- `go install` - compiles pkgs + install
+- `go list -f '{{.Target}}'` - discover the go install path, where binaries are installed
